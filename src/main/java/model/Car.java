@@ -76,7 +76,21 @@ public class Car {
         this.photos.add(photo);
     }
 
-
+    public static Car of(Marka marka, Model model, Body body, Gear gear,
+                         EngineType engineType, Privod privod, int year, int probeg, double price) {
+        Car car = new Car();
+        car.created =  new Date(System.currentTimeMillis());;
+        car.marka = marka;
+        car.model = model;
+        car.body = body;
+        car.gear = gear;
+        car.engineType = engineType;
+        car.privod = privod;
+        car.year = year;
+        car.probeg = probeg;
+        car.price = price;
+        return car;
+    }
 
     public int getId() {
         return id;
@@ -186,6 +200,7 @@ public class Car {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 
     @Override
     public boolean equals(Object obj) {

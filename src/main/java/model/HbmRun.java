@@ -6,7 +6,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import store.HbmStore;
 
+import java.util.Collection;
 import java.util.List;
 
 public class HbmRun {
@@ -19,32 +21,17 @@ public class HbmRun {
             SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
             Session session = sf.openSession();
             session.beginTransaction();
+            Collection<Car> cars = HbmStore.instOf().findAll(Car.class);
+            cars.forEach(System.out::println);
+           /* Marka marka = session.load(Marka.class, 1);
+            Model model = session.load(Model.class, 1);
+            Car car = Car.of(marka, model, Body.Седан, Gear.Ручная, EngineType.Газ, Privod.Задний, 1986, 155000, 75000.0d);
 
-            Marka marka = Marka.of("LADA");
-            session.persist(marka);
-            Marka marka2 = Marka.of("BMW");
-            session.persist(marka2);
+            session.persist(car);
+            Car car2 = Car.of(marka, model, Body.Седан, Gear.Ручная, EngineType.Газ, Privod.Задний, 1988, 234000, 15000.0d);
 
-            Model one = Model.of("2101", marka);
-            session.persist(one);
-
-            Model two = Model.of("2110", marka);
-            session.persist(two);
-
-            Model three = Model.of("Kalina", marka);
-            session.persist(three);
-
-            Model four = Model.of("Priora", marka);
-            session.persist(four);
-
-            Model five = Model.of("Vesta", marka);
-            session.persist(five);
-
-            Model b1 = Model.of("X5", marka2);
-            session.persist(b1);
-
-            Model b2 = Model.of("535i", marka2);
-            session.persist(b2);
+            session.persist(car2);
+*/
 
 
             session.getTransaction().commit();

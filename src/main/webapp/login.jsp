@@ -34,15 +34,15 @@
                 <form class="modal-content" action="<%=request.getContextPath()%>/auth.do" method="post">
                     <label id="error" ></label>
                     <div class="form-group">
-                        <label>Почта</label>
-                        <input type="text" class="form-control" name="email">
+                        <label for="email">Почта</label>
+                        <input type="text" class="form-control" name="email" id="email">
                     </div>
                     <div class="form-group">
-                        <label>Пароль</label>
-                        <input type="text" class="form-control" name="password">
+                        <label for="pwd">Пароль</label>
+                        <input type="text" class="form-control" name="password" id="pwd">
                     </div>
                     <button type="submit" class="btn btn-primary">Войти</button>
-                    <button type="button" onclick="<%=request.getContextPath()%>/reg.jsp" class="cancelbtn">Регистрация</button>
+                    <a href="<%=request.getContextPath()%>/reg.jsp">Регистрация</a>
                 </form>
             </div>
         </div>

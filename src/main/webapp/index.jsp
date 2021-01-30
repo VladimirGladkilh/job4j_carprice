@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!doctype html>
 <html>
 <head>
     <title>-=CarPrice=- Сдай свое ведро в утиль и купи другое ведро</title>
@@ -22,6 +21,9 @@
             });
         });
     });
+    function openCard(id) {
+        open("<%=request.getContextPath()%>/reg.jsp&id=" + id, this);
+    }
 </script>
 <div class="container">
     <div class="panel-heading text-right">
@@ -43,7 +45,7 @@
                 <label>Объявления о продаже автомобилей</label>
             </th>
             <th>
-                <input class="form-control" id="myInput" type="text" placeholder="Найти..">
+                <label for="myInput"></label><input class="form-control" id="myInput" type="text" placeholder="Найти..">
             </th>
         </tr>
     </table>
@@ -55,7 +57,7 @@
             </h5>
         </div>
     </div>
-    <table class="table table-bordered">
+    <table id="myTable" class="table table-bordered">
         <thead>
         <tr>
             <th scope="col"></th>
@@ -73,10 +75,17 @@
         </thead>
         <tbody>
 
-        <c:forEach items="${cars}" var="car">
-            <tr>
+        <c:forEach items="${requestScope.cars}" var="car">
+            <tr onclick='openCard("${car.id}")'>
                 <td>
-                    <img src='<c:url value="/download?path=${car.mainPhoto.path}"/>' alt="imgDefault.png" class="img-responsive" width="100px" height="100px">
+                    <c:if test="${car.mainPhoto != null}">
+                    <img src='<c:url value="/download?path=${car.mainPhoto.path}"/>'
+                         class="img-responsive" width="100px" height="100px">
+                    </c:if>
+                    <c:if test="${car.mainPhoto == null}">
+                        <img src='<c:url value="/download?path=imgDefault.png"/>'
+                             class="img-responsive" width="100px" height="100px">
+                    </c:if>
                 </td>
                 <td>
                     <c:out value="${car.marka.name}"/>
@@ -88,7 +97,25 @@
                     <c:out value="${car.year}"/>
                 </td>
                 <td>
-                    <c:out value="${car.model.name}"/>
+                    <c:out value="${car.body.name()}"/>
+                </td>
+                <td>
+                    <c:out value="${car.gear.name()}"/>
+                </td>
+                <td>
+                    <c:out value="${car.privod.name()}"/>
+                </td>
+                <td>
+                    <c:out value="${car.engineType.name()}"/>
+                </td>
+                <td>
+                    <c:out value="${car.probeg}"/>
+                </td>
+                <td>
+                    <c:out value="${car.price}"/>
+                </td>
+                <td>
+                <input type="checkbox" id="${car.id}" ${car.saled ? "checked" : ""} disabled/>
                 </td>
             </tr>
         </c:forEach>

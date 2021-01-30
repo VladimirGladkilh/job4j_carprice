@@ -9,15 +9,20 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collection;
 import java.util.function.Function;
 
 public class HbmStore implements Store {
     private final StandardServiceRegistry registry;
     private final SessionFactory sf;
+    private static final Logger log = LoggerFactory.getLogger(HbmStore.class);
 
     public HbmStore() {
         BasicConfigurator.configure();
+        log.info("Init store");
         registry = new StandardServiceRegistryBuilder()
                 .configure().build();
         sf = new MetadataSources(registry)
@@ -34,6 +39,7 @@ public class HbmStore implements Store {
 
     @Override
     public void close() throws Exception {
+        log.info("Destroy store");
         StandardServiceRegistryBuilder.destroy(registry);
     }
 
@@ -46,6 +52,7 @@ public class HbmStore implements Store {
             return rsl;
         } catch (final Exception e) {
             session.getTransaction().rollback();
+            log.error("Tr error ", e);
             throw e;
         } finally {
             session.close();
@@ -56,6 +63,7 @@ public class HbmStore implements Store {
     public <T> Collection<T> findAll(Class<T> item) {
         return this.tx(session -> {
             final Query<T> query = session.createQuery("from "+ item.getName(), item);
+            System.out.println("Find ALL");
             return query.list();
         });
     }
