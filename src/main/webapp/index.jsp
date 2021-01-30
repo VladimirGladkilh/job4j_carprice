@@ -12,22 +12,63 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="row">
 
-    <% if (request.getAttribute("user") != null) {%>
-    <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">Привет <c:out value="${user.name}"/> |
-        Выход</a>
-    <%} else {%>
-    <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">Войти</a>
-    <%}%>
-
-</div>
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
 <div class="container">
-    <h2>Объявления о продаже автомобилей</h2>
+    <div class="panel-heading text-right">
+        <h5>
+            <% if (request.getAttribute("user") != null) {%>
+            <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">Привет <c:out value="${user.name}"/>
+                |
+                Выход</a>
+            <%} else {%>
+            <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">Войти</a>
+            <%}%>
+        </h5>
+    </div>
+</div>
+<div class="panel-body">
+    <table class="table">
+        <tr>
+            <th>
+                <label>Объявления о продаже автомобилей</label>
+            </th>
+            <th>
+                <input class="form-control" id="myInput" type="text" placeholder="Найти..">
+            </th>
+        </tr>
+    </table>
+
+    <div class="container">
+        <div class="panel-heading text-right">
+            <h5>
+                <a class="nav-link" href="<%=request.getContextPath()%>/car/edit.jsp">Добавить</a>
+            </h5>
+        </div>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th scope="col">РќР°Р·РІР°РЅРёСЏ</th>
+            <th scope="col"></th>
+            <th scope="col">Марка</th>
+            <th scope="col">Модель</th>
+            <th scope="col">Год выпуска</th>
+            <th scope="col">Кузов</th>
+            <th scope="col">Коробка</th>
+            <th scope="col">Привод</th>
+            <th scope="col">Тип двигателя</th>
+            <th scope="col">Пробег</th>
+            <th scope="col">Цена</th>
+            <th scope="col">Продано</th>
         </tr>
         </thead>
         <tbody>
@@ -35,7 +76,16 @@
         <c:forEach items="${cars}" var="car">
             <tr>
                 <td>
+                    <img src='<c:url value="/download?path=${car.mainPhoto.path}"/>' alt="imgDefault.png" class="img-responsive" width="100px" height="100px">
+                </td>
+                <td>
                     <c:out value="${car.marka.name}"/>
+                </td>
+                <td>
+                    <c:out value="${car.model.name}"/>
+                </td>
+                <td>
+                    <c:out value="${car.year}"/>
                 </td>
                 <td>
                     <c:out value="${car.model.name}"/>

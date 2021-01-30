@@ -31,7 +31,7 @@
             </div>
 
             <div class="card-body">
-                <form action="<%=request.getContextPath()%>/auth.do" method="post">
+                <form class="modal-content" action="<%=request.getContextPath()%>/auth.do" method="post">
                     <label id="error" ></label>
                     <div class="form-group">
                         <label>Почта</label>
@@ -42,7 +42,7 @@
                         <input type="text" class="form-control" name="password">
                     </div>
                     <button type="submit" class="btn btn-primary">Войти</button>
-                    <a href="<%=request.getContextPath()%>/reg.jsp">Регистрация</a>
+                    <button type="button" onclick="<%=request.getContextPath()%>/reg.jsp" class="cancelbtn">Регистрация</button>
                 </form>
             </div>
         </div>
