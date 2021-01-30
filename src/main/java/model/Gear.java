@@ -1,8 +1,8 @@
 package model;
 
 public enum Gear {
-    Manual,
-    Automat,
-    Robot,
-    Variator;
+    Ручная,
+    Автомат,
+    Робот,
+    Вариатор;
 }

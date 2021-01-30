@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/todolist</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/carprice</property>
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">1Qwerty</property>
         <property name="hibernate.connection.pool_size">1</property>
@@ -22,6 +22,10 @@
         <mapping class="model.Photo"/>
         <mapping class="model.Marka"/>
         <mapping class="model.Model"/>
+        <mapping class="model.Privod"/>
+        <mapping class="model.EngineType"/>
+        <mapping class="model.Gear"/>
+        <mapping class="model.Body"/>
 
     </session-factory>
 </hibernate-configuration>

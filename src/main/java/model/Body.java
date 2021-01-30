@@ -1,11 +1,11 @@
 package model;
 
 public enum Body {
-    Hatchback,
-    Sedan,
-    Vagon,
-    SUV,
-    Offroad,
-    Puckup,
-    Multivan
+    Хэчбэк,
+    Седан,
+    Универсал,
+    Кросовер,
+    Внедорожник,
+    Пикап,
+    Фургон
 }

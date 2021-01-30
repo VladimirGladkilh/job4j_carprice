@@ -1,6 +1,7 @@
 package store;
 
 import model.User;
+import org.apache.log4j.BasicConfigurator;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -16,6 +17,7 @@ public class HbmStore implements Store {
     private final SessionFactory sf;
 
     public HbmStore() {
+        BasicConfigurator.configure();
         registry = new StandardServiceRegistryBuilder()
                 .configure().build();
         sf = new MetadataSources(registry)

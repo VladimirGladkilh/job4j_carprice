@@ -12,26 +12,49 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+
     @ManyToOne
     @JoinColumn(name = "marka_id")
     private Marka marka;
+
     @ManyToOne
     @JoinColumn(name = "model_id")
     private Model model;
+
     @ManyToOne
-    @JoinColumn(name = "marka_id")
+    @JoinColumn(name = "photo_id")
     private Photo mainPhoto;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "body")
     private Body body;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gear")
     private Gear gear;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "engineType")
     private EngineType engineType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "privod")
     private Privod privod;
+
     private int year;
     private int probeg;
     private double price;
     private boolean saled = false;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Photo> photos = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Photo getMainPhoto() {
         return mainPhoto;
@@ -53,12 +76,7 @@ public class Car {
         this.photos.add(photo);
     }
 
-    @OneToMany(mappedBy = "photo")
-    private List<Photo> photos = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     public int getId() {
         return id;

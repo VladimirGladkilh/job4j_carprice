@@ -1,5 +1,6 @@
 package model;
 
+import org.apache.log4j.BasicConfigurator;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -9,7 +10,9 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import java.util.List;
 
 public class HbmRun {
+
     public static void main(String[] args) {
+        BasicConfigurator.configure();
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure().build();
         try {

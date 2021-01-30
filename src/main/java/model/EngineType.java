@@ -1,8 +1,8 @@
 package model;
 
 public enum EngineType {
-    Benzin,
-    Diesel,
-    Gaz,
-    Electro;
+    Бензиновый,
+    Дизельный,
+    Газ,
+    Электрический;
 }

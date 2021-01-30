@@ -10,6 +10,7 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String path="";
+
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
