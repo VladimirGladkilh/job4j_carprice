@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "car")
@@ -19,6 +20,10 @@ public class Car {
     @ManyToOne
     @JoinColumn(name = "model_id")
     private Model model;
+    @ManyToOne
+    @JoinColumn(name = "marka_id")
+    private Photo mainPhoto;
+
     private Body body;
     private Gear gear;
     private EngineType engineType;
@@ -27,6 +32,14 @@ public class Car {
     private int probeg;
     private double price;
     private boolean saled = false;
+
+    public Photo getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(Photo mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
 
     public List<Photo> getPhotos() {
         return photos;
@@ -40,7 +53,7 @@ public class Car {
         this.photos.add(photo);
     }
 
-    @OneToMany(mappedBy = "marka")
+    @OneToMany(mappedBy = "photo")
     private List<Photo> photos = new ArrayList<>();
 
     @ManyToOne
@@ -149,5 +162,25 @@ public class Car {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Car car = (Car) obj;
+        return id == car.id;
+    }
+
+    @Override
+    public String toString() {
+        return marka +
+                " " + model +
+                " " + year;
     }
 }

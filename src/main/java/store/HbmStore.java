@@ -1,5 +1,6 @@
 package store;
 
+import model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -50,9 +51,9 @@ public class HbmStore implements Store {
     }
 
     @Override
-    public <T> Collection<T> findAll(Class<T> cl) {
+    public <T> Collection<T> findAll(Class<T> item) {
         return this.tx(session -> {
-            final Query query = session.createQuery("from "+ cl.getName(), cl);
+            final Query<T> query = session.createQuery("from "+ item.getName(), item);
             return query.list();
         });
     }
@@ -66,12 +67,30 @@ public class HbmStore implements Store {
     }
 
     @Override
-    public <T> boolean delete(Class<T> item) {
+    public <T> boolean delete(T item) {
         this.tx(session -> {
             session.delete(item);
             return true;
         });
         return false;
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return this.tx(session -> {
+            final Query<User> query = session.createQuery("from model.User m where m.email=:email");
+            query.setParameter("email", email);
+            return query.stream().findAny().orElse(null);
+        });
+    }
+
+    @Override
+    public <T> T findById(Class<T> item, int id) {
+        return (T) this.tx(session -> {
+            final Query<T> query = session.createQuery("from "+ item.getName() + " m where m.id=:id", item);
+            query.setParameter("id", id);
+            return query.stream().findAny().orElse(null);
+        });
     }
 
 

@@ -63,10 +63,6 @@ public class Model {
 
     @Override
     public String toString() {
-        return "Model{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", marka=" + marka +
-                '}';
+        return name;
     }
 }
