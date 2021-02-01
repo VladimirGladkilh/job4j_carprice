@@ -34,7 +34,7 @@ public class CarServlet extends HttpServlet {
         }
         FILE_STORE_HELPER.prepareFileStore(this.getServletContext());
 
-        if (req.getParameter("deleteid") != null ){
+        if (req.getParameter("saleid") != null ){
             Car delCar = HbmStore.instOf().findById(Car.class, Integer.parseInt(req.getParameter("deleteid")));
             delCar.getPhotos().forEach(photo -> FILE_STORE_HELPER.clearStorrage(photo.getPath()));
             HbmStore.instOf().delete(delCar);
@@ -80,7 +80,7 @@ public class CarServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("cars", HbmStore.instOf().findAll(Car.class));
         req.setAttribute("user", req.getSession().getAttribute("user"));
-        req.getRequestDispatcher("car.jsp").forward(req, resp);
+        req.getRequestDispatcher("car/edit.jsp").forward(req, resp);
 
     }
 

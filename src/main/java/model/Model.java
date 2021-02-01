@@ -14,7 +14,7 @@ public class Model {
 
     private String name;
 
-    @ManyToOne( )
+    @ManyToOne
     @JoinColumn(name = "marka_id")
     private Marka marka;
 

@@ -14,14 +14,14 @@
 <html>
 <head>
     <title>-=CarPrice=- Сдай свое ведро в утиль и купи другое ведро</title>
-    <link rel="icon" type="image/png" href="favicon.ico"/>
+    <link rel="icon" type="image/png" href="/carprice/favicon.ico"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
-<body onload="getMetaData()">
+<body onload="loadData()">
 <%
     String id = request.getParameter("id");
     Car car = new Car();
@@ -40,10 +40,18 @@
     }
 %>
 <script>
-    function getMetaData() {
+    function loadData() {
+        getMarkaData();
+        getModelList();
+        getEnumList("body");
+        getEnumList("gear");
+        getEnumList("engineType");
+        getEnumList("privod")
+    }
+    function getMarkaData() {
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/carprice/marka.do?list=true",
+            url: "http://localhost:8080/carprice/model.do?action=marka",
             dataType: 'json',
             origin: "http://localhost:8081"
         })
@@ -58,6 +66,51 @@
                     }
                 }
                 $('#marka').html(markas);
+            })
+            .fail(function (err) {
+                alert("err " + err.message);
+            })
+    }
+
+    function getModelList() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/carprice/model.do?action=model",
+            data: "markaId=" + $('#marka').val(),
+            dataType: 'json',
+            origin: "http://localhost:8081"
+        })
+            .done(function (data) {
+                var modelId = $('#model').val();
+                let model = "<option value=\"\"></option>";
+                for (let i = 0; i < data.length; i++) {
+                    if (modelId === data[i]['id']) {
+                        model += "<option value=" + data[i]['id'] + " selected>" + data[i]['name'] + "</option>";
+                    } else {
+                        model += "<option value=" + data[i]['id'] + ">" + data[i]['name'] + "</option>";
+                    }
+                }
+                $('#model').html(model);
+            })
+            .fail(function (err) {
+                alert("err " + err.message);
+            })
+    }
+
+    function getEnumList(enumType) {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/carprice/model.do?",
+            data: "action=" + enumType,
+            dataType: 'json',
+            origin: "http://localhost:8081"
+        })
+            .done(function (data) {
+                let model = "<option value=\"\"></option>";
+                for (let i = 0; i < data.length; i++) {
+                    model += "<option value=" + data[i]['id'] + ">" + data[i]['name'] + "</option>";
+                }
+                document.getElementById(enumType).innerHTML(model);
             })
             .fail(function (err) {
                 alert("err " + err.message);
@@ -81,36 +134,40 @@
     <div class="card" style="width: 100%">
         <div class="card-header">
             <% if (id == null) { %>
-            Добавляем объявление.
+            Добавляем объявление
             <% } else { %>
-            Редактируем объявление.
+            Редактируем объявление
             <% } %>
         </div>
         <div class="card-body">
-            <% if (request.getAttribute("user") != null) {%>
+            <!--% if (request.getAttribute("user") != null) {%-->
             <form action="<%=request.getContextPath()%>/car.do?id=<%=car.getId()%>" method="post"
                   enctype="multipart/form-data">
                 <div class="form-group">
-                    <label>РРјСЏ</label>
-                    <input type="text" class="form-control" name="name" value="<%=candidate.getName()%>">
-                    <a href="<%=request.getContextPath()%>/download?path=<%=photo.getPath()%>">Download</a>
-                    <img src="<%=request.getContextPath()%>/download?path=<%=photo.getPath()%>" width="100px"
-                         height="100px"/>
+                    <label for="marka">Марка</label>
+                    <select class="form-control" id="marka" name="marka" onchange="getModelList()"></select>
+                    <label for="model">Модель</label>
+                    <select class="form-control" id="model" name="model"></select>
+                    <label for="year">Год</label>
+                    <input type="text" name="year" id="year" value="${car.year}"/>
+                    <label for="body">Кузов</label>
+                    <select class="form-control" name="body" id="body">${car.body}</select>
+                    <label for="gear">Коробка</label>
+                    <select class="form-control" name="gear" id="gear">${car.gear}</select>
+                    <label for="engineType">Двигатель</label>
+                    <select class="form-control" name="engineType" id="engineType">${car.engineType}</select>
+                    <label for="privod">Привод</label>
+                    <select class="form-control" name="privod" id="privod">${car.privod}</select>
+                    <label for="description">Описание</label>
+                    <input type="text" size="3" class="form-control" name="description" id="description">${car.description}</input>
                 </div>
                 <div class="checkbox">
                     <input type="file" class="form-control" name="image">
                 </div>
-                <div class="form-group">
-                    <label for="city">Р“РѕСЂРѕРґ:</label>
-                    <select class="form-control" id="city" name="cityId">
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">РЎРѕС…СЂР°РЅРёС‚СЊ</button>
+
+                <button type="submit" class="btn btn-primary">Сохранить</button>
                 <button type="button" class="btn btn-primary" name="back" onclick="history.back()">back</button>
             </form>
-            <%} else {%>
-
-            <%}%>
         </div>
     </div>
 </div>

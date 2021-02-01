@@ -56,4 +56,20 @@
         <servlet-name>UploadServlet</servlet-name>
         <url-pattern>/upload</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ModelServlet</servlet-name>
+        <servlet-class>servlet.ModelServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ModelServlet</servlet-name>
+        <url-pattern>/model.do</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>CarServlet</servlet-name>
+        <servlet-class>servlet.CarServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CarServlet</servlet-name>
+        <url-pattern>/car.do</url-pattern>
+    </servlet-mapping>
 </web-app>

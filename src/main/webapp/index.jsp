@@ -22,7 +22,7 @@
         });
     });
     function openCard(id) {
-        open("<%=request.getContextPath()%>/reg.jsp&id=" + id, this);
+        open("<%=request.getContextPath()%>/car/edit.jsp&id=" + id, this);
     }
 </script>
 <div class="container">
