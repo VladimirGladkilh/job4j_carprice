@@ -1,5 +1,6 @@
 package store;
 
+import model.Marka;
 import model.User;
 import org.apache.log4j.BasicConfigurator;
 import org.hibernate.Session;
@@ -62,10 +63,17 @@ public class HbmStore implements Store {
     @Override
     public <T> Collection<T> findAll(Class<T> item) {
         return this.tx(session -> {
-            final Query<T> query = session.createQuery("from "+ item.getName(), item);
-            System.out.println("Find ALL");
+            final Query<T> query = session.createQuery("from " + item.getName() + " fetch all properties", item);
+            log.info("Find ALL");
             return query.list();
         });
+    }
+
+    @Override
+    public Collection<Marka> findAllMarka() {
+        return this.tx(session -> 
+             session.createQuery("select c from Marka c join fetch c.models").list()
+        );
     }
 
     @Override
@@ -97,7 +105,7 @@ public class HbmStore implements Store {
     @Override
     public <T> T findById(Class<T> item, int id) {
         return (T) this.tx(session -> {
-            final Query<T> query = session.createQuery("from "+ item.getName() + " m where m.id=:id", item);
+            final Query<T> query = session.createQuery("from " + item.getName() + " m where m.id=:id", item);
             query.setParameter("id", id);
             return query.stream().findAny().orElse(null);
         });

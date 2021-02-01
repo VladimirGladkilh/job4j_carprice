@@ -49,12 +49,25 @@ public class Car {
     private double price;
     private boolean saled = false;
 
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Photo> photos = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Car() {
+    }
 
     public Photo getMainPhoto() {
         return mainPhoto;
@@ -77,7 +90,7 @@ public class Car {
     }
 
     public static Car of(Marka marka, Model model, Body body, Gear gear,
-                         EngineType engineType, Privod privod, int year, int probeg, double price) {
+                         EngineType engineType, Privod privod, int year, int probeg, double price, String description) {
         Car car = new Car();
         car.created =  new Date(System.currentTimeMillis());;
         car.marka = marka;
@@ -89,6 +102,7 @@ public class Car {
         car.year = year;
         car.probeg = probeg;
         car.price = price;
+        car.description = description;
         return car;
     }
 

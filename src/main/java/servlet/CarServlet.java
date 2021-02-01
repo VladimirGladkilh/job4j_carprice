@@ -3,13 +3,11 @@ package servlet;
 import model.Car;
 import model.FileStoreHelper;
 import model.Photo;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import store.HbmStore;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -82,7 +80,8 @@ public class CarServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("cars", HbmStore.instOf().findAll(Car.class));
         req.setAttribute("user", req.getSession().getAttribute("user"));
-        req.getRequestDispatcher("candidates.jsp").forward(req, resp);
+        req.getRequestDispatcher("car.jsp").forward(req, resp);
+
     }
 
 }

@@ -1,6 +1,9 @@
 package model;
 
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,7 @@ public class Marka {
     private String name;
 
     @OneToMany(mappedBy = "marka")
+    @Fetch(FetchMode.JOIN)
     private List<Model> models = new ArrayList<>();
 
     public List<Model> getModels() {
@@ -64,10 +68,5 @@ public class Marka {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 }
