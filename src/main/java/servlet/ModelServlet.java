@@ -20,8 +20,8 @@ public class ModelServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(ModelServlet.class);
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("models", HbmStore.instOf().findAll(Model.class));
-        req.setAttribute("markas", HbmStore.instOf().findAll(Marka.class));
+       // req.setAttribute("models", HbmStore.instOf().findAll(Model.class));
+       // req.setAttribute("markas", HbmStore.instOf().findAll(Marka.class));
         req.setAttribute("user", req.getSession().getAttribute("user"));
         String string = "";
 
@@ -34,10 +34,15 @@ public class ModelServlet extends HttpServlet {
                 ObjectMapper mapper = new ObjectMapper();
                 string = mapper.writeValueAsString(list);
             } else if ("model".equalsIgnoreCase(req.getParameter("action"))) {
-                int markaId = Integer.parseInt(req.getParameter("markaId"));
-                Marka marka = HbmStore.instOf().findById(Marka.class, markaId);
-                Collection<Model> list = HbmStore.instOf().findModelByMarka(marka);
-                list.forEach(l -> l.setMarka(null));
+                Collection<Model> list = new ArrayList<>();
+                if (req.getParameter("markaId") != null && !"null".equalsIgnoreCase(req.getParameter("markaId"))) {
+                    int markaId = Integer.parseInt(req.getParameter("markaId"));
+                    Marka marka = HbmStore.instOf().findById(Marka.class, markaId);
+                    list = HbmStore.instOf().findModelByMarka(marka);
+                } else {
+                    list = HbmStore.instOf().findAll(Model.class);
+                }
+                list.forEach(l -> l.setMarka(null)); //тут приходится чистить иначе обджектмаппер колбасит с переполнением стека
                 ObjectMapper mapper = new ObjectMapper();
                 string = mapper.writeValueAsString(list);
             } else if ("body".equalsIgnoreCase(req.getParameter("action"))) {

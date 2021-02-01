@@ -48,6 +48,7 @@
         getEnumList("engineType");
         getEnumList("privod")
     }
+
     function getMarkaData() {
         $.ajax({
             type: "GET",
@@ -108,9 +109,18 @@
             .done(function (data) {
                 let model = "<option value=\"\"></option>";
                 for (let i = 0; i < data.length; i++) {
-                    model += "<option value=" + data[i]['id'] + ">" + data[i]['name'] + "</option>";
+                    if ((enumType === "body" && "<%=car.getBody().name() %>" === data[i]['id'])
+                        || (enumType === "gear" && "<%= car.getGear().name() %>" === data[i]['id'])
+                        || (enumType === "engineType" && "<%= car.getEngineType().name() %>" === data[i]['id'])
+                        || (enumType === "privod" && "<%= car.getPrivod().name() %>" === data[i]['id'])
+                    ) {
+                        model += "<option value=" + data[i]['id'] + " selected>" + data[i]['name'] + "</option>";
+                    } else {
+                        model += "<option value=" + data[i]['id'] + ">" + data[i]['name'] + "</option>";
+                    }
                 }
-                document.getElementById(enumType).innerHTML(model);
+
+                $('#'+enumType).html(model);
             })
             .fail(function (err) {
                 alert("err " + err.message);
@@ -149,20 +159,30 @@
                     <label for="model">Модель</label>
                     <select class="form-control" id="model" name="model"></select>
                     <label for="year">Год</label>
-                    <input type="text" name="year" id="year" value="${car.year}"/>
+                    <input type="text" name="year" id="year" value="<%= car.getYear() %>"/>
                     <label for="body">Кузов</label>
-                    <select class="form-control" name="body" id="body">${car.body}</select>
+                    <select class="form-control" name="body" id="body"><%= car.getBody().name() %></select>
                     <label for="gear">Коробка</label>
-                    <select class="form-control" name="gear" id="gear">${car.gear}</select>
+                    <select class="form-control" name="gear" id="gear"><%= car.getGear().name() %></select>
                     <label for="engineType">Двигатель</label>
-                    <select class="form-control" name="engineType" id="engineType">${car.engineType}</select>
+                    <select class="form-control" name="engineType" id="engineType"><%= car.getEngineType().name() %></select>
                     <label for="privod">Привод</label>
-                    <select class="form-control" name="privod" id="privod">${car.privod}</select>
+                    <select class="form-control" name="privod" id="privod"><%= car.getPrivod().name() %></select>
                     <label for="description">Описание</label>
-                    <input type="text" size="3" class="form-control" name="description" id="description">${car.description}</input>
-                </div>
-                <div class="checkbox">
-                    <input type="file" class="form-control" name="image">
+                    <input type="text" size="3" class="form-control" name="description"
+                           id="description" value="<%= car.getDescription() %>"/>
+                    <div>
+                        <label for="image">Фото</label>
+                        <% if (car.getMainPhoto() == null) {%>
+                        <img src='/carprice/download?path=imgDefault.png'
+                             class="img-thumbnail" width="100px" id="image" name="image" height="100px">
+
+                        <%} else {%>
+                        <img src="<%=car.getMainPhoto().getPath()%>" width="100px" height="100px" class="img-thumbnail" alt="Image not found">
+                        <%}%>
+                        <input type="file" class="form-control" name="image" id="image">
+                        <a href="#">+</a>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Сохранить</button>
