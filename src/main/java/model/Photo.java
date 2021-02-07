@@ -11,31 +11,14 @@ public class Photo {
     private int id;
     private String path="";
 
-    @ManyToOne
-    @JoinColumn(name = "car_id")
-    private Car car;
-
-    public Photo(int id, String path, Car car) {
-        this.id = id;
-        this.path = path;
-        this.car = car;
-    }
-
-    public Photo() {
-
-    }
-
-    public Car getCar() {
-        return car;
-    }
-
-    public void setCar(Car car) {
-        this.car = car;
-    }
 
     public Photo(int id, String path) {
         this.id = id;
         this.path = path;
+    }
+
+    public Photo() {
+
     }
 
     public int getId() {

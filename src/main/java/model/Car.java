@@ -1,9 +1,10 @@
 package model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,10 +19,12 @@ public class Car {
 
     @ManyToOne
     @JoinColumn(name = "marka_id")
+    @Fetch(FetchMode.JOIN)
     private Marka marka;
 
     @ManyToOne
     @JoinColumn(name = "model_id")
+    @Fetch(FetchMode.JOIN)
     private Model model;
 
     @ManyToOne
@@ -59,9 +62,6 @@ public class Car {
         this.description = description;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Photo> photos = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -77,22 +77,10 @@ public class Car {
         this.mainPhoto = mainPhoto;
     }
 
-    public List<Photo> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(List<Photo> photos) {
-        this.photos = photos;
-    }
-
-    public void addPhotos(Photo photo) {
-        this.photos.add(photo);
-    }
-
     public static Car of(Marka marka, Model model, Body body, Gear gear,
                          EngineType engineType, Privod privod, int year, int probeg, double price, String description) {
         Car car = new Car();
-        car.created =  new Date(System.currentTimeMillis());;
+        car.created = new Date(System.currentTimeMillis());
         car.marka = marka;
         car.model = model;
         car.body = body;
@@ -229,5 +217,10 @@ public class Car {
         return marka +
                 " " + model +
                 " " + year;
+    }
+
+    public Car(int id) {
+        this.id = id;
+        this.created = new Date(System.currentTimeMillis());
     }
 }

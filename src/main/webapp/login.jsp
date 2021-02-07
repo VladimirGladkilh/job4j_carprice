@@ -32,7 +32,7 @@
 
             <div class="card-body">
                 <form class="modal-content" action="<%=request.getContextPath()%>/auth.do" method="post">
-                    <label id="error" ></label>
+                    <label id="error" ><%=request.getAttribute("error")%></label>
                     <div class="form-group">
                         <label for="email">Почта</label>
                         <input type="text" class="form-control" name="email" id="email">

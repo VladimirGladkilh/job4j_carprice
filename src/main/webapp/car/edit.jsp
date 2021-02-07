@@ -1,8 +1,5 @@
-<%@ page import="model.Car" %>
-<%@ page import="model.Photo" %>
 <%@ page import="store.HbmStore" %>
-<%@ page import="model.Marka" %>
-<%@ page import="model.Model" %><%--
+<%@ page import="model.*" %><%--
   Created by IntelliJ IDEA.
   User: Gladkih
   Date: 30.01.2021
@@ -11,6 +8,7 @@
   Страница для просмотра/редактирования объявления
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>-=CarPrice=- Сдай свое ведро в утиль и купи другое ведро</title>
@@ -23,13 +21,13 @@
 </head>
 <body onload="loadData()">
 <%
-    String id = request.getParameter("id");
-    Car car = new Car();
+    int id = Integer.parseInt(request.getParameter("carId"));
+    Car car = new Car(0);
     Photo photo = new Photo(0, "");
     Marka marka = new Marka();
     Model model = new Model();
-    if (id != null) {
-        car = HbmStore.instOf().findById(Car.class, Integer.parseInt(id));
+    if (id > 0) {
+        car = HbmStore.instOf().findById(Car.class, id);
         if (car != null) {
             if (car.getMainPhoto() != null) {
                 photo = car.getMainPhoto();
@@ -42,7 +40,7 @@
 <script>
     function loadData() {
         getMarkaData();
-        getModelList();
+        getModelList()
         getEnumList("body");
         getEnumList("gear");
         getEnumList("engineType");
@@ -52,7 +50,7 @@
     function getMarkaData() {
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/carprice/model.do?action=marka",
+            url: "http://localhost:8080/carprice/model.do?carId=<%= car.getId()%>&action=marka",
             dataType: 'json',
             origin: "http://localhost:8081"
         })
@@ -67,6 +65,7 @@
                     }
                 }
                 $('#marka').html(markas);
+
             })
             .fail(function (err) {
                 alert("err " + err.message);
@@ -76,13 +75,13 @@
     function getModelList() {
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/carprice/model.do?action=model",
+            url: "http://localhost:8080/carprice/model.do?carId=<%= car.getId()%>&action=model",
             data: "markaId=" + $('#marka').val(),
             dataType: 'json',
             origin: "http://localhost:8081"
         })
             .done(function (data) {
-                var modelId = $('#model').val();
+                var modelId = <%=model.getId()%>;
                 let model = "<option value=\"\"></option>";
                 for (let i = 0; i < data.length; i++) {
                     if (modelId === data[i]['id']) {
@@ -101,7 +100,7 @@
     function getEnumList(enumType) {
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/carprice/model.do?",
+            url: "http://localhost:8080/carprice/model.do?carId=<%= car.getId()%>&",
             data: "action=" + enumType,
             dataType: 'json',
             origin: "http://localhost:8081"
@@ -109,18 +108,22 @@
             .done(function (data) {
                 let model = "<option value=\"\"></option>";
                 for (let i = 0; i < data.length; i++) {
-                    if ((enumType === "body" && "<%=car.getBody().name() %>" === data[i]['id'])
-                        || (enumType === "gear" && "<%= car.getGear().name() %>" === data[i]['id'])
-                        || (enumType === "engineType" && "<%= car.getEngineType().name() %>" === data[i]['id'])
-                        || (enumType === "privod" && "<%= car.getPrivod().name() %>" === data[i]['id'])
-                    ) {
-                        model += "<option value=" + data[i]['id'] + " selected>" + data[i]['name'] + "</option>";
+                    if ("<%=car.getId()%>" !== "0") {
+                        if ((enumType === "body" && "<%=car.getBody() %>" === data[i]['id'])
+                            || (enumType === "gear" && "<%= car.getGear() %>" === data[i]['id'])
+                            || (enumType === "engineType" && "<%= car.getEngineType() %>" === data[i]['id'])
+                            || (enumType === "privod" && "<%= car.getPrivod() %>" === data[i]['id'])
+                        ) {
+                            model += "<option value=" + data[i]['id'] + " selected>" + data[i]['name'] + "</option>";
+                        } else {
+                            model += "<option value=" + data[i]['id'] + ">" + data[i]['name'] + "</option>";
+                        }
                     } else {
                         model += "<option value=" + data[i]['id'] + ">" + data[i]['name'] + "</option>";
                     }
                 }
 
-                $('#'+enumType).html(model);
+                $('#' + enumType).html(model);
             })
             .fail(function (err) {
                 alert("err " + err.message);
@@ -143,15 +146,15 @@
 <div class="container">
     <div class="card" style="width: 100%">
         <div class="card-header">
-            <% if (id == null) { %>
+            <% if (id == 0) { %>
             Добавляем объявление
             <% } else { %>
             Редактируем объявление
             <% } %>
         </div>
         <div class="card-body">
-            <!--% if (request.getAttribute("user") != null) {%-->
-            <form action="<%=request.getContextPath()%>/car.do?id=<%=car.getId()%>" method="post"
+
+            <form action="<%=request.getContextPath()%>/car.do?carId=<%=car.getId()%>" method="post"
                   enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="marka">Марка</label>
@@ -160,14 +163,22 @@
                     <select class="form-control" id="model" name="model"></select>
                     <label for="year">Год</label>
                     <input type="text" name="year" id="year" value="<%= car.getYear() %>"/>
+                    <label for="probeg">Пробег</label>
+                    <input type="text" name="probeg" id="probeg" value="<%= car.getProbeg() %>"/>
+                    <label for="price">Цена</label>
+                    <input type="text" name="price" id="price" value="<%= car.getPrice() %>"/>
                     <label for="body">Кузов</label>
-                    <select class="form-control" name="body" id="body"><%= car.getBody().name() %></select>
+                    <select class="form-control" name="body" id="body"><%= car.getBody() %>
+                    </select>
                     <label for="gear">Коробка</label>
-                    <select class="form-control" name="gear" id="gear"><%= car.getGear().name() %></select>
+                    <select class="form-control" name="gear" id="gear"><%= car.getGear() %>
+                    </select>
                     <label for="engineType">Двигатель</label>
-                    <select class="form-control" name="engineType" id="engineType"><%= car.getEngineType().name() %></select>
+                    <select class="form-control" name="engineType" id="engineType"><%= car.getEngineType() %>
+                    </select>
                     <label for="privod">Привод</label>
-                    <select class="form-control" name="privod" id="privod"><%= car.getPrivod().name() %></select>
+                    <select class="form-control" name="privod" id="privod"><%= car.getPrivod() %>
+                    </select>
                     <label for="description">Описание</label>
                     <input type="text" size="3" class="form-control" name="description"
                            id="description" value="<%= car.getDescription() %>"/>
@@ -178,14 +189,23 @@
                              class="img-thumbnail" width="100px" id="image" name="image" height="100px">
 
                         <%} else {%>
-                        <img src="<%=car.getMainPhoto().getPath()%>" width="100px" height="100px" class="img-thumbnail" alt="Image not found">
+                        <img src="<%=car.getMainPhoto().getPath()%>" width="100px" height="100px" class="img-thumbnail"
+                             alt="Image not found">
                         <%}%>
                         <input type="file" class="form-control" name="image" id="image">
                         <a href="#">+</a>
                     </div>
                 </div>
-
+                <% if (request.getAttribute("user") != null) {
+                    if (id == 0 || request.getAttribute("user").equals(car.getUser())) {%>
                 <button type="submit" class="btn btn-primary">Сохранить</button>
+                <%}%>
+                <% if (!car.isSaled()) {%>
+                <button type="button" class="btn btn-primary"
+                        formaction="<%=request.getContextPath()%>/car.do?saleId=<%=car.getId()%>">Продано
+                </button>
+                <%}%>
+                <%}%>
                 <button type="button" class="btn btn-primary" name="back" onclick="history.back()">back</button>
             </form>
         </div>

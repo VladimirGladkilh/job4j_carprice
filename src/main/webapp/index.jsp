@@ -22,7 +22,7 @@
         });
     });
     function openCard(id) {
-        open("<%=request.getContextPath()%>/car.do?id=" + id, this);
+        open("<%=request.getContextPath()%>/car.do?carId=" + id, this);
     }
 </script>
 <div class="container">
@@ -53,7 +53,7 @@
     <div class="container">
         <div class="panel-heading text-right">
             <h5>
-                <a class="nav-link" href="<%=request.getContextPath()%>/car/edit.jsp">Добавить</a>
+                <a class="nav-link" href='<c:url value="/car.do?carId=0"/>'>Добавить</a>
             </h5>
         </div>
     </div>

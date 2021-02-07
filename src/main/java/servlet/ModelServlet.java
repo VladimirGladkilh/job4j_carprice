@@ -1,10 +1,7 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import model.Body;
-import model.EnumDataHelper;
-import model.Marka;
-import model.Model;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import store.HbmStore;
@@ -35,13 +32,16 @@ public class ModelServlet extends HttpServlet {
                 string = mapper.writeValueAsString(list);
             } else if ("model".equalsIgnoreCase(req.getParameter("action"))) {
                 Collection<Model> list = new ArrayList<>();
+                int markaId = 0;
                 if (req.getParameter("markaId") != null && !"null".equalsIgnoreCase(req.getParameter("markaId"))) {
-                    int markaId = Integer.parseInt(req.getParameter("markaId"));
+                    markaId = Integer.parseInt(req.getParameter("markaId"));
+                } else if (req.getParameter("carId") != null && Integer.parseInt(req.getParameter("carId")) > 0) {
+                    Car car = HbmStore.instOf().findById(Car.class, Integer.parseInt(req.getParameter("carId")));
+                    markaId = car.getMarka().getId();
+                }
                     Marka marka = HbmStore.instOf().findById(Marka.class, markaId);
                     list = HbmStore.instOf().findModelByMarka(marka);
-                } else {
-                    list = HbmStore.instOf().findAll(Model.class);
-                }
+
                 list.forEach(l -> l.setMarka(null)); //тут приходится чистить иначе обджектмаппер колбасит с переполнением стека
                 ObjectMapper mapper = new ObjectMapper();
                 string = mapper.writeValueAsString(list);
