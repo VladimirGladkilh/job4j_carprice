@@ -51,6 +51,7 @@ public class HbmStore implements Store {
         try {
             T rsl = command.apply(session);
             tx.commit();
+            session.close();
             return rsl;
         } catch (final Exception e) {
             session.getTransaction().rollback();
@@ -106,7 +107,7 @@ public class HbmStore implements Store {
     @Override
     public <T> T findById(Class<T> item, int id) {
         return (T) this.tx(session -> {
-            final Query<T> query = session.createQuery("from " + item.getName() + " m fetch all properties where m.id=:id", item);
+            final Query<T> query = session.createQuery("from " + item.getName() + " where id=:id", item);
             query.setParameter("id", id);
             return query.stream().findAny().orElse(null);
         });

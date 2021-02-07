@@ -5,4 +5,9 @@ public enum Gear {
     Автомат,
     Робот,
     Вариатор;
+
+    @Override
+    public String toString() {
+        return this.name();
+    }
 }

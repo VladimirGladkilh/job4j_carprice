@@ -5,4 +5,9 @@ public enum EngineType {
     Дизельный,
     Газ,
     Электрический;
+
+    @Override
+    public String toString() {
+        return this.name();
+    }
 }

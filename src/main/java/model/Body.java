@@ -7,5 +7,10 @@ public enum Body {
     Кросовер,
     Внедорожник,
     Пикап,
-    Фургон
+    Фургон;
+
+    @Override
+    public String toString() {
+        return this.name();
+    }
 }

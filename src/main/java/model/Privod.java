@@ -3,5 +3,10 @@ package model;
 public enum Privod {
     Задний,
     Передний,
-    Полный
+    Полный;
+
+    @Override
+    public String toString() {
+        return this.name();
+    }
 }
