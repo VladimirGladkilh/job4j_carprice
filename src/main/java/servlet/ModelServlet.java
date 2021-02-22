@@ -26,12 +26,11 @@ public class ModelServlet extends HttpServlet {
             req.getRequestDispatcher("car.jsp").forward(req, resp);
         } else {
             if ("marka".equalsIgnoreCase(req.getParameter("action"))) {
-                Collection<Marka> list = HbmStore.instOf().findAll(Marka.class);
+                Collection<Marka> list = HbmStore.instOf().findAllMarka();
                 list.forEach(l -> l.setModels(null));
                 ObjectMapper mapper = new ObjectMapper();
                 string = mapper.writeValueAsString(list);
             } else if ("model".equalsIgnoreCase(req.getParameter("action"))) {
-                Collection<Model> list = new ArrayList<>();
                 int markaId = 0;
                 if (req.getParameter("markaId") != null && !"null".equalsIgnoreCase(req.getParameter("markaId"))) {
                     markaId = Integer.parseInt(req.getParameter("markaId"));
@@ -40,7 +39,7 @@ public class ModelServlet extends HttpServlet {
                     markaId = car.getMarka().getId();
                 }
                     Marka marka = HbmStore.instOf().findById(Marka.class, markaId);
-                    list = HbmStore.instOf().findModelByMarka(marka);
+                Collection<Model> list = HbmStore.instOf().findModelByMarka(marka);
 
                 list.forEach(l -> l.setMarka(null)); //тут приходится чистить иначе обджектмаппер колбасит с переполнением стека
                 ObjectMapper mapper = new ObjectMapper();

@@ -24,8 +24,7 @@ public class IndexServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.info("doPost");
-        List<Car> cars = (List<Car>) HbmStore.instOf().findAll(Car.class);
-        System.out.println("post " + cars);
+        List<Car> cars = (List<Car>) HbmStore.instOf().findAllCar();
         req.setAttribute("cars", cars);
         req.setAttribute("user", req.getSession().getAttribute("user"));
         resp.sendRedirect(req.getContextPath() + "/index.do");
@@ -34,7 +33,7 @@ public class IndexServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.info("doGet");
-        List<Car> cars = (List<Car>) HbmStore.instOf().findAll(Car.class);
+        List<Car> cars = (List<Car>) HbmStore.instOf().findAllCar();
         req.setAttribute("cars", cars);
         req.setAttribute("user", req.getSession().getAttribute("user"));
         req.getRequestDispatcher("index.jsp").forward(req, resp);

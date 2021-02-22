@@ -1,5 +1,6 @@
 package store;
 
+import model.Car;
 import model.Marka;
 import model.Model;
 import model.User;
@@ -10,6 +11,7 @@ public interface Store extends AutoCloseable {
 
     <T> Collection<T> findAll(Class<T> item);
     Collection<Marka> findAllMarka();
+    Collection<Car> findAllCar();
     <T> T save(T item);
     <T> boolean delete(T item);
     User findUserByEmail(String email);

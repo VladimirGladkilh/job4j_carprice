@@ -2,10 +2,11 @@ package model;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "car")
@@ -15,8 +16,7 @@ public class Car {
     private int id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
-
+    private Date created = new Date(System.currentTimeMillis());
     @ManyToOne
     @JoinColumn(name = "marka_id")
     @Fetch(FetchMode.JOIN)
@@ -26,10 +26,6 @@ public class Car {
     @JoinColumn(name = "model_id")
     @Fetch(FetchMode.JOIN)
     private Model model;
-
-    @ManyToOne
-    @JoinColumn(name = "photo_id")
-    private Photo mainPhoto;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "body")
@@ -51,8 +47,30 @@ public class Car {
     private int probeg;
     private double price;
     private boolean saled = false;
-
     private String description;
+
+    @OneToMany(mappedBy = "car")
+    //@Fetch(FetchMode.JOIN)
+    private List<Photo> photos = new LinkedList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Car() {
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
+    }
+
+    public void addPhotos(Photo photo) {
+        this.photos.add(photo);
+    }
 
     public String getDescription() {
         return description;
@@ -62,20 +80,10 @@ public class Car {
         this.description = description;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    public Car() {
+    public Photo viewMainPhoto() {
+        return this.photos.size() > 0 ? this.photos.get(0) : null;
     }
 
-    public Photo getMainPhoto() {
-        return mainPhoto;
-    }
-
-    public void setMainPhoto(Photo mainPhoto) {
-        this.mainPhoto = mainPhoto;
-    }
 
     public static Car of(Marka marka, Model model, Body body, Gear gear,
                          EngineType engineType, Privod privod, int year, int probeg, double price, String description) {

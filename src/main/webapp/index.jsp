@@ -78,11 +78,11 @@
         <c:forEach items="${requestScope.cars}" var="car">
             <tr onclick='openCard("${car.id}")'>
                 <td>
-                    <c:if test="${car.mainPhoto != null}">
-                    <img src='<c:url value="/download?path=${car.mainPhoto.path}"/>'
+                    <c:if test="${car.viewMainPhoto() != null}">
+                    <img src='<c:url value="/download?path=${car.viewMainPhoto().path}"/>'
                          class="img-responsive" width="100px" height="100px">
                     </c:if>
-                    <c:if test="${car.mainPhoto == null}">
+                    <c:if test="${car.viewMainPhoto() == null}">
                         <img src='<c:url value="/download?path=imgDefault.png"/>'
                              class="img-responsive" width="100px" height="100px">
                     </c:if>

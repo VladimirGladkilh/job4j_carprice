@@ -65,7 +65,7 @@ public class CarHelper {
         car.setDescription(description);
 
         Photo photo = createPhoto(req, car);
-        car.setMainPhoto(photo);
+        car.addPhotos(photo);
 
         User user = (User) req.getSession().getAttribute("user");
         car.setUser(user);
@@ -89,10 +89,7 @@ public class CarHelper {
     }
 
     public Photo createPhoto(HttpServletRequest req, Car car) throws IOException, ServletException {
-        Photo photo = new Photo(0, "");
-        if (car != null && car.getMainPhoto() != null) {
-            photo = car.getMainPhoto();
-        }
+        Photo photo = new Photo(0, "", car);
         File folder = FILE_STORE_HELPER.getRootFolder();
         for (Part part : req.getParts()) {
             String fileName = FILE_STORE_HELPER.extractFileName(part);

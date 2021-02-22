@@ -38,9 +38,16 @@ public class HbmRun {
             marka.setModels(models);
             session.persist(marka);
 
+            Marka marka2 = new Marka();
+            marka2.setName("ZAZ");
 
+            List<Model> models2 = List.of(Model.of("Tavria", marka2), Model.of("Slavuta", marka2),
+                    Model.of("Chanse", marka2), Model.of("Sens", marka2) );
+            models2.forEach(session::persist);
+            marka2.setModels(models2);
+            session.persist(marka2);
 
-           session.getTransaction().commit();
+            session.getTransaction().commit();
             session.close();
         }  catch (Exception e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package store;
 
+import model.Car;
 import model.Marka;
 import model.Model;
 import model.User;
@@ -74,14 +75,22 @@ public class HbmStore implements Store {
     @Override
     public Collection<Marka> findAllMarka() {
         return this.tx(session -> 
-             session.createQuery("select c from Marka c join fetch c.models").list()
+             session.createQuery("select c from Marka c fetch all properties ").list()
+        );
+    }
+
+    @Override
+    public Collection<Car> findAllCar() {
+        return this.tx(session ->
+                //session.createQuery("select c from Car c join fetch c.photos").list()
+                session.createQuery("select c from Car c fetch all properties ").list()
         );
     }
 
     @Override
     public <T> T save(T item) {
         return this.tx(session -> {
-            session.persist(item);
+            session.saveOrUpdate(item);
             return item;
         });
     }

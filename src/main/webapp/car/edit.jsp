@@ -29,8 +29,8 @@
     if (id > 0) {
         car = HbmStore.instOf().findById(Car.class, id);
         if (car != null) {
-            if (car.getMainPhoto() != null) {
-                photo = car.getMainPhoto();
+            if (car.viewMainPhoto() != null) {
+                photo = car.viewMainPhoto();
             }
             marka = car.getMarka();
             model = car.getModel();
@@ -52,7 +52,7 @@
             type: "GET",
             url: "http://localhost:8080/carprice/model.do?carId=<%= car.getId()%>&action=marka",
             dataType: 'json',
-            origin: "http://localhost:8081"
+            origin: "http://localhost:8080"
         })
             .done(function (data) {
                 var markaId = <%=marka.getId()%>;
@@ -78,7 +78,7 @@
             url: "http://localhost:8080/carprice/model.do?carId=<%= car.getId()%>&action=model",
             data: "markaId=" + $('#marka').val(),
             dataType: 'json',
-            origin: "http://localhost:8081"
+            origin: "http://localhost:8080"
         })
             .done(function (data) {
                 var modelId = <%=model.getId()%>;
@@ -103,7 +103,7 @@
             url: "http://localhost:8080/carprice/model.do?carId=<%= car.getId()%>&",
             data: "action=" + enumType,
             dataType: 'json',
-            origin: "http://localhost:8081"
+            origin: "http://localhost:8080"
         })
             .done(function (data) {
                 let model = "<option value=\"\"></option>";
@@ -184,16 +184,27 @@
                            id="description" value="<%= car.getDescription() %>"/>
                     <div>
                         <label for="image">Фото</label>
-                        <% if (car.getMainPhoto() == null) {%>
+                        <% if (car.viewMainPhoto() == null) {%>
                         <img src='/carprice/download?path=imgDefault.png'
                              class="img-thumbnail" width="100px" id="image" name="image" height="100px">
 
                         <%} else {%>
-                        <img src="<%=car.getMainPhoto().getPath()%>" width="100px" height="100px" class="img-thumbnail"
+
+                        <img src="<%=request.getContextPath()%>/download?path=<%=car.viewMainPhoto().getPath()%>" width="100px" height="100px" class="img-thumbnail"
                              alt="Image not found">
+                        <div class="row">
+                        <% int i = 0;
+                        for (Photo phot: car.getPhotos()
+                                ) {  %>
+                            <div class="column">
+                                <img src="<%=request.getContextPath()%>/download?path=<%=phot.getPath()%>" onclick="openModal();currentSlide(i++)" width="100px" height="100px" class="img-thumbnail">
+                            </div>
+                        <% } %>
+
+                        </div>
                         <%}%>
                         <input type="file" class="form-control" name="image" id="image">
-                        <a href="#">+</a>
+
                     </div>
                 </div>
                 <% if (request.getAttribute("user") != null) {

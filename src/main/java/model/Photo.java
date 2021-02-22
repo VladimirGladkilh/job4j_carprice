@@ -11,14 +11,23 @@ public class Photo {
     private int id;
     private String path="";
 
+    @ManyToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
+
+    public Photo() {
+
+    }
 
     public Photo(int id, String path) {
         this.id = id;
         this.path = path;
     }
 
-    public Photo() {
-
+    public Photo(int id, String path, Car car) {
+        this.id = id;
+        this.path = path;
+        this.car = car;
     }
 
     public int getId() {
@@ -35,6 +44,14 @@ public class Photo {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
     }
 
     @Override

@@ -36,7 +36,7 @@ public class CarServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("cars", HbmStore.instOf().findAll(Car.class));
+        req.setAttribute("cars", HbmStore.instOf().findAllCar());
         req.setAttribute("user", req.getSession().getAttribute("user"));
         req.getRequestDispatcher("car/edit.jsp").forward(req, resp);
 
