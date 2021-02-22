@@ -183,7 +183,7 @@
                     <input type="text" size="3" class="form-control" name="description"
                            id="description" value="<%= car.getDescription() %>"/>
                     <div>
-                        <label for="image">Фото</label>
+                        <label for="image">Фото</label> <input type="file" class="form-control" name="image" id="image">
                         <% if (car.viewMainPhoto() == null) {%>
                         <img src='/carprice/download?path=imgDefault.png'
                              class="img-thumbnail" width="100px" id="image" name="image" height="100px">
@@ -193,19 +193,19 @@
                         <img src="<%=request.getContextPath()%>/download?path=<%=car.viewMainPhoto().getPath()%>" width="100px" height="100px" class="img-thumbnail"
                              alt="Image not found">
                         <div class="row">
-                        <% int i = 0;
+                        <% int i = 1;
                         for (Photo phot: car.getPhotos()
                                 ) {  %>
                             <div class="column">
-                                <img src="<%=request.getContextPath()%>/download?path=<%=phot.getPath()%>" onclick="openModal();currentSlide(i++)" width="100px" height="100px" class="img-thumbnail">
+                                <img src="<%=request.getContextPath()%>/download?path=<%=phot.getPath()%>"
+                                     onclick="openModal();currentSlide(<%= i++ %>)" width="100px" height="100px" class="img-thumbnail">
                             </div>
                         <% } %>
 
                         </div>
                         <%}%>
-                        <input type="file" class="form-control" name="image" id="image">
-
                     </div>
+
                 </div>
                 <% if (request.getAttribute("user") != null) {
                     if (id == 0 || request.getAttribute("user").equals(car.getUser())) {%>
