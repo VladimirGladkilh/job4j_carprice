@@ -20,9 +20,61 @@
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
         });
+        getMarkaData();
+        changeSelect();
     });
+
     function openCard(id) {
         open("<%=request.getContextPath()%>/car.do?carId=" + id, this);
+    }
+
+    function getMarkaData() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/carprice/model.do?carId=0&action=marka",
+            dataType: 'json',
+            origin: "http://localhost:8080"
+        })
+            .done(function (data) {
+                let markas = "<option value=\"\"></option>";
+                for (let i = 0; i < data.length; i++) {
+                    markas += "<option value=" + data[i]['id'] + ">" + data[i]['name'] + "</option>";
+                }
+                $('#marka').html(markas);
+
+            })
+            .fail(function (err) {
+                alert("err " + err.message);
+            })
+    }
+
+    function changeSelect() {
+        var select = document.getElementById("myFilter").value;
+        if (select != "withMarka") {
+            document.getElementById("marka").style.display = "none";
+            document.getElementById("forMarka").style.display = "none";
+        } else {
+            document.getElementById("marka").style.display = "block";
+            document.getElementById("forMarka").style.display = "block";
+        }
+    }
+    function filter() {
+        var select = document.getElementById("myFilter").value;
+        var markaId = document.getElementById("marka").value;
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/carprice/index.do?",
+            data: "filter=" + select + "&markaId=" + markaId,
+            dataType: 'json',
+            origin: "http://localhost:8080"
+        })
+            .done(function (data) {
+                location.reload();
+                console.log("index load")
+            })
+            .fail(function (err) {
+                alert("err " + err);
+            })
     }
 </script>
 <div class="container">
@@ -35,6 +87,9 @@
             <%} else {%>
             <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp">Войти</a>
             <%}%>
+        </h5>
+        <h5>
+            <a class="nav-link" href='<c:url value="/car.do?carId=0"/>'>Добавить объявление</a>
         </h5>
     </div>
 </div>
@@ -50,12 +105,17 @@
         </tr>
     </table>
 
-    <div class="container">
-        <div class="panel-heading text-right">
-            <h5>
-                <a class="nav-link" href='<c:url value="/car.do?carId=0"/>'>Добавить</a>
-            </h5>
-        </div>
+    <div class="row">
+        <label id="forFilter" for="myFilter">Фильтр по</label>
+        <select class="form-control" name="myFilter" id="myFilter" onchange="changeSelect()">
+            <option value="lastDay" >За последний день</option>
+            <option value="withImage" >C фото</option>
+            <option value="withMarka" >По марке</option>
+        </select>
+        <label id="forMarka" for="marka">Марка</label>
+        <select class="form-control" id="marka" name="marka" ></select>
+        <button class="btn btn-primary"id="filterBtn" type="button" onclick="filter()">Фильтровать</button>
+
     </div>
     <table id="myTable" class="table table-bordered">
         <thead>
@@ -79,8 +139,8 @@
             <tr onclick='openCard("${car.id}")'>
                 <td>
                     <c:if test="${car.viewMainPhoto() != null}">
-                    <img src='<c:url value="/download?path=${car.viewMainPhoto().path}"/>'
-                         class="img-responsive" width="100px" height="100px">
+                        <img src='<c:url value="/download?path=${car.viewMainPhoto().path}"/>'
+                             class="img-responsive" width="100px" height="100px">
                     </c:if>
                     <c:if test="${car.viewMainPhoto() == null}">
                         <img src='<c:url value="/download?path=imgDefault.png"/>'
@@ -115,7 +175,7 @@
                     <c:out value="${car.price}"/>
                 </td>
                 <td>
-                <input type="checkbox" id="${car.id}" ${car.saled ? "checked" : ""} disabled/>
+                    <input type="checkbox" id="${car.id}" ${car.saled ? "checked" : ""} disabled/>
                 </td>
             </tr>
         </c:forEach>

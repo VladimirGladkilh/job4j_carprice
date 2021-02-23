@@ -15,6 +15,7 @@ import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -82,8 +83,37 @@ public class HbmStore implements Store {
     @Override
     public Collection<Car> findAllCar() {
         return this.tx(session ->
-                //session.createQuery("select c from Car c join fetch c.photos").list()
                 session.createQuery("select c from Car c fetch all properties ").list()
+        );
+    }
+
+    @Override
+    public Collection<Car> findCarByDay() {
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR, 0);
+        today.set(Calendar.MINUTE, 0);;
+        today.set(Calendar.SECOND, 0);
+        return this.tx(session ->
+                session.createQuery("select c from Car c fetch all properties where c.created>=:data ")
+                        .setParameter("data", today.getTime())
+                        .list()
+        );
+    }
+
+    @Override
+    public Collection<Car> findCarWithPhoto() {
+        return this.tx(session ->
+                session.createQuery("select c from Car c fetch all properties where c.photos.size > 0 ")
+                        .list()
+        );
+    }
+
+    @Override
+    public Collection<Car> findCarByMarka(Marka marka) {
+        return this.tx(session ->
+                session.createQuery("select c from Car c fetch all properties where c.marka=:marka ")
+                        .setParameter("marka", marka)
+                        .list()
         );
     }
 

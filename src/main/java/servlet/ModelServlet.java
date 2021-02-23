@@ -17,9 +17,7 @@ public class ModelServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(ModelServlet.class);
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-       // req.setAttribute("models", HbmStore.instOf().findAll(Model.class));
-       // req.setAttribute("markas", HbmStore.instOf().findAll(Marka.class));
-        req.setAttribute("user", req.getSession().getAttribute("user"));
+       req.setAttribute("user", req.getSession().getAttribute("user"));
         String string = "";
 
         if (req.getParameter("action") == null) {
