@@ -3,6 +3,6 @@
 Связка гибернейта, аякса и чего нибудь еще/
 
 Схема данных:
-![alt text](https://ibb.co/x8MQZsQ)
-![alt text](https://github.com/VladimirGladkilh/job4j_carprice/blob/master/db/CXEMA.jpg?raw=true)
 
+Схема данных:
+![alt text](https://github.com/VladimirGladkilh/job4j_carprice/blob/master/src/main/java/db/CXEMA.jpg)
