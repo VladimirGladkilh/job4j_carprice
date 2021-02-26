@@ -29,7 +29,8 @@ public class IndexServlet extends HttpServlet {
         List<Car> cars = getCarsFilter(req);
         req.setAttribute("cars", cars);
         req.setAttribute("user", req.getSession().getAttribute("user"));
-        resp.sendRedirect(req.getContextPath() + "/index.do");
+
+        req.getRequestDispatcher("index.jsp").include(req, resp);
     }
 
     private List<Car> getCarsFilter(HttpServletRequest req) {

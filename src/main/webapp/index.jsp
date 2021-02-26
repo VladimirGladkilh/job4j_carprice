@@ -61,20 +61,25 @@
     function filter() {
         var select = document.getElementById("myFilter").value;
         var markaId = document.getElementById("marka").value;
-        $.ajax({
+        location.href = "<%=request.getContextPath()%>/index.do?filter=" + select + "&markaId=" + markaId;
+        /*$.ajax({
             type: "POST",
             url: "http://localhost:8080/carprice/index.do?",
             data: "filter=" + select + "&markaId=" + markaId,
-            dataType: 'json',
+
             origin: "http://localhost:8080"
         })
             .done(function (data) {
-                location.reload();
+                document.outerHTML = data
+                //document.write(data);
+
+               // var newWindow = window.open("");
+                //newWindow.document.write(data);
                 console.log("index load")
             })
             .fail(function (err) {
                 alert("err " + err);
-            })
+            })*/
     }
 </script>
 <div class="container">
